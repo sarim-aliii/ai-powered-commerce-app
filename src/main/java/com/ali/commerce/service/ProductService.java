@@ -3,7 +3,6 @@ package com.ali.commerce.service;
 import com.ali.commerce.entity.Product;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface ProductService {

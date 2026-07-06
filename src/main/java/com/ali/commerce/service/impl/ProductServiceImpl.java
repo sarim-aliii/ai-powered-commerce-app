@@ -8,7 +8,7 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     @Override
-    public String getProductById(Integer id) {
+    public Product getProductById(Integer id) {
         return null;
     }
 
@@ -23,12 +23,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<String> getAllProducts() {
+    public List<Product> getAllProducts() {
         return null;
     }
 
     @Override
-    public String updateProduct(Integer id) {
+    public String updateProduct(Integer id, Product product) {
         return null;
     }
 }
