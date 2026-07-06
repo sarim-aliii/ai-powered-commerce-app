@@ -1,0 +1,27 @@
+package com.ali.commerce.repository;
+
+import com.ali.commerce.entity.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+@Repository
+public interface ProductRepository extends JpaRepository<Product, Long> {
+    Optional<Product> findByName(String name);
+
+    List<Product> findByCategory(String category);
+
+    List<Product> findByBrand(String brand);
+
+    boolean existsByName(String name);
+
+    List<Product> findByPriceLessThan(BigDecimal price);
+
+    List<Product> findByQuantityGreaterThan(Integer quantity);
+
+    List<Product> findByBrandAndCategory(String brand, String category);
+
+    List<Product> findByNameContainingIgnoreCase(String keyword);
+}

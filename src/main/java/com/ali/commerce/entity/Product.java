@@ -1,21 +1,33 @@
 package com.ali.commerce.entity;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Data;
 
-import java.util.Date;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "products")
+@Data
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(length = 1000)
     private String description;
-    private  double price;
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal price;
+
+    @Column(nullable = false)
     private Integer quantity;
     private String category;
     private String brand;
-    private Date createdAt;
-    private Date updatedAt;
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }
