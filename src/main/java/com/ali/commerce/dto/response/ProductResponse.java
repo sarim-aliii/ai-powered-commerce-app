@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class ProductResponse {
-    private Integer id;
+    private Long id; // Corrected from Integer to Long to match Product entity
     private String name;
     private String description;
     private BigDecimal price;

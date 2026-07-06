@@ -1,5 +1,6 @@
 package com.ali.commerce.controller;
 
+import com.ali.commerce.dto.response.UserResponse;
 import com.ali.commerce.entity.User;
 import com.ali.commerce.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -20,25 +21,25 @@ public class UserController {
     // Create User
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User createUser(@RequestBody User user) {
+    public UserResponse createUser(@RequestBody User user) {
         return userService.createUser(user);
     }
 
     // Get All Users
     @GetMapping
-    public List<User> getAllUsers() {
+    public List<UserResponse> getAllUsers() {
         return userService.getAllUsers();
     }
 
     // Get User By Id
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable Integer id) {
+    public UserResponse getUserById(@PathVariable Integer id) {
         return userService.getUserById(id);
     }
 
     // Update User
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable Integer id, @RequestBody User user) {
+    public UserResponse updateUser(@PathVariable Integer id, @RequestBody User user) {
         return userService.updateUser(id, user);
     }
 

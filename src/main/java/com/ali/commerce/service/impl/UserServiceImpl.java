@@ -1,48 +1,70 @@
 package com.ali.commerce.service.impl;
 
+import com.ali.commerce.dto.response.UserResponse;
 import com.ali.commerce.entity.User;
+import com.ali.commerce.mapper.UserMapper;
 import com.ali.commerce.repository.UserRepository;
 import com.ali.commerce.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder; // Injected to hash passwords securely
 
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    @Override
+    public UserResponse createUser(User request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("Email is already registered"); // Can be replaced with a custom exception
+        }
+
+        User user = userMapper.toEntity(request);
+
+        // Hash the password before saving to the database
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        User savedUser = userRepository.save(user);
+        return userMapper.toResponse(savedUser);
     }
 
     @Override
-    public User createUser(User user) {
-        return userRepository.save(user);
+    public List<UserResponse> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::toResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
-
-    @Override
-    public User getUserById(Integer id) {
-        return userRepository.findById(id)
+    public UserResponse getUserById(Integer id) {
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+
+        return userMapper.toResponse(user);
     }
 
     @Override
-    public User updateUser(Integer id, User user) {
+    public UserResponse updateUser(Integer id, User request) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
 
-        existingUser.setName(user.getName());
-        existingUser.setEmail(user.getEmail());
-        existingUser.setPassword(user.getPassword());
-        existingUser.setRole(user.getRole());
+        // Use the mapper to apply updates
+        userMapper.updateEntity(existingUser, request);
 
-        return userRepository.save(existingUser);
+        // Re-encode the password if it was updated
+        if (request.getPassword() != null && !request.getPassword().isEmpty()) {
+            existingUser.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
+
+        User updatedUser = userRepository.save(existingUser);
+        return userMapper.toResponse(updatedUser);
     }
 
     @Override

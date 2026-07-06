@@ -1,18 +1,19 @@
 package com.ali.commerce.service;
 
+import com.ali.commerce.dto.response.ProductResponse;
 import com.ali.commerce.entity.Product;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
 public interface ProductService {
-    public Product getProductById(@PathVariable Integer id);
 
-    public String deleteById(Integer id);
+    ProductResponse getProductById(Long id);
 
-    public String addProduct(Product product);
+    String deleteById(Long id);
 
-    public List<Product> getAllProducts();
+    String addProduct(Product request);
 
-    public String updateProduct(Integer id, Product product);
+    List<ProductResponse> getAllProducts();
+
+    String updateProduct(Long id, Product request);
 }
