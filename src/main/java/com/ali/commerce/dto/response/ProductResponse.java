@@ -16,7 +16,10 @@ public class ProductResponse {
     private String description;
     private BigDecimal price;
     private Integer quantity;
-    private String category;
+
+    private Long categoryId;
+    private String categoryName;
+
     private String brand;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

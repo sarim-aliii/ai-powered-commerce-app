@@ -27,8 +27,9 @@ public class Product {
     @Column(nullable = false)
     private Integer quantity;
 
-    // Note: If you plan to use your Category.java entity, this would become a @ManyToOne relationship later
-    private String category;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 
     private String brand;
 

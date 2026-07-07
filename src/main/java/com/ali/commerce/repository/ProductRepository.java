@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Product> findByName(String name);
 
-    List<Product> findByCategory(String category);
+    List<Product> findByCategoryId(Long categoryId);
 
     List<Product> findByBrand(String brand);
 
@@ -22,7 +22,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findByQuantityGreaterThan(Integer quantity);
 
-    List<Product> findByBrandAndCategory(String brand, String category);
+    List<Product> findByBrandAndCategoryId(String brand, Long categoryId);
 
     List<Product> findByNameContainingIgnoreCase(String keyword);
 }

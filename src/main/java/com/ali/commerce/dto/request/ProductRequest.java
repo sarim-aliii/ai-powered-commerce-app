@@ -27,8 +27,8 @@ public class ProductRequest {
     @PositiveOrZero(message = "Quantity cannot be negative")
     private Integer quantity;
 
-    @NotBlank(message = "Category is required")
-    private String category;
+    @NotNull(message = "Category ID is required")
+    private Long categoryId;
 
     @NotBlank(message = "Brand is required")
     private String brand;
