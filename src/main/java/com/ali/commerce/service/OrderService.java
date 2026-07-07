@@ -1,5 +1,6 @@
 package com.ali.commerce.service;
 
+import com.ali.commerce.dto.request.CheckoutRequest;
 import com.ali.commerce.dto.request.OrderRequest;
 import com.ali.commerce.dto.response.OrderResponse;
 
@@ -12,4 +13,5 @@ public interface OrderService {
     List<OrderResponse> getOrdersByUser(Integer userId);
     String updateOrderStatus(Long id, String status);
     void deleteOrder(Long id);
+    OrderResponse checkoutCart(CheckoutRequest request);
 }

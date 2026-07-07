@@ -3,6 +3,7 @@ package com.ali.commerce.controller;
 import com.ali.commerce.dto.request.OrderRequest;
 import com.ali.commerce.dto.response.OrderResponse;
 import com.ali.commerce.service.OrderService;
+import com.ali.commerce.dto.request.CheckoutRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -50,5 +51,10 @@ public class OrderController {
     public ResponseEntity<Void> deleteOrder(@PathVariable Long id) {
         orderService.deleteOrder(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/checkout")
+    public ResponseEntity<OrderResponse> checkoutCart(@Valid @RequestBody CheckoutRequest request) {
+        return new ResponseEntity<>(orderService.checkoutCart(request), HttpStatus.CREATED);
     }
 }

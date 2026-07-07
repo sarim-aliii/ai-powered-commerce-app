@@ -1,5 +1,9 @@
 package com.ali.commerce.service.impl;
 
+import com.ali.commerce.dto.request.CheckoutRequest;
+import com.ali.commerce.entity.Cart;
+import com.ali.commerce.entity.CartItem;
+import com.ali.commerce.repository.CartRepository;
 import com.ali.commerce.dto.request.OrderRequest;
 import com.ali.commerce.dto.response.OrderResponse;
 import com.ali.commerce.entity.Order;
@@ -24,6 +28,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
+    private final CartRepository cartRepository;
     private final OrderMapper orderMapper;
 
     @Override
@@ -122,5 +127,67 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException("Order not found with id: " + id);
         }
         orderRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public OrderResponse checkoutCart(CheckoutRequest request) {
+        // 1. Fetch User
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // 2. Fetch User's Cart
+        Cart cart = cartRepository.findByUserId(request.getUserId())
+                .orElseThrow(() -> new RuntimeException("Cart not found for user. Please add items to cart first."));
+
+        if (cart.getItems().isEmpty()) {
+            throw new RuntimeException("Cannot checkout an empty cart");
+        }
+
+        // 3. Initialize the Order
+        Order order = new Order();
+        order.setUser(user);
+        order.setShippingAddress(request.getShippingAddress());
+        order.setStatus("PENDING");
+
+        BigDecimal totalAmount = BigDecimal.ZERO;
+
+        // 4. Process Cart Items into Order Items
+        for (CartItem cartItem : cart.getItems()) {
+            Product product = cartItem.getProduct();
+
+            // 5. Check Inventory
+            if (product.getQuantity() < cartItem.getQuantity()) {
+                throw new RuntimeException("Insufficient inventory for product: " + product.getName() + ". Only " + product.getQuantity() + " left.");
+            }
+
+            // 6. Deduct Inventory
+            product.setQuantity(product.getQuantity() - cartItem.getQuantity());
+            productRepository.save(product); // Save updated stock
+
+            // 7. Create the OrderItem
+            OrderItem orderItem = new OrderItem();
+            orderItem.setOrder(order);
+            orderItem.setProduct(product);
+            orderItem.setQuantity(cartItem.getQuantity());
+            orderItem.setPrice(product.getPrice()); // Lock in historical price
+
+            order.getItems().add(orderItem);
+
+            // 8. Calculate total amount
+            BigDecimal lineTotal = product.getPrice().multiply(new BigDecimal(cartItem.getQuantity()));
+            totalAmount = totalAmount.add(lineTotal);
+        }
+
+        order.setTotalAmount(totalAmount);
+
+        // 9. Save the Order (Cascades to save OrderItems)
+        Order savedOrder = orderRepository.save(order);
+
+        // 10. Clear the user's cart now that the order is placed!
+        cart.getItems().clear();
+        cartRepository.save(cart);
+
+        return orderMapper.toResponse(savedOrder);
     }
 }
