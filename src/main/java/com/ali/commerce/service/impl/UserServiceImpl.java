@@ -1,11 +1,13 @@
 package com.ali.commerce.service.impl;
 
 import com.ali.commerce.dto.response.UserResponse;
+import com.ali.commerce.dto.request.UserRequest;
 import com.ali.commerce.entity.User;
 import com.ali.commerce.mapper.UserMapper;
 import com.ali.commerce.repository.UserRepository;
 import com.ali.commerce.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,10 +19,10 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final PasswordEncoder passwordEncoder; // Injected to hash passwords securely
+    private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserResponse createUser(User request) {
+    public UserResponse createUser(UserRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email is already registered"); // Can be replaced with a custom exception
         }
@@ -51,7 +53,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse updateUser(Integer id, User request) {
+    public UserResponse updateUser(Integer id, UserRequest request) {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
 

@@ -1,7 +1,7 @@
 package com.ali.commerce.service;
 
 import com.ali.commerce.dto.response.ProductResponse;
-import com.ali.commerce.entity.Product;
+import com.ali.commerce.dto.request.ProductRequest;
 
 import java.util.List;
 
@@ -11,9 +11,9 @@ public interface ProductService {
 
     String deleteById(Long id);
 
-    String addProduct(Product request);
+    String addProduct(ProductRequest request);
 
     List<ProductResponse> getAllProducts();
 
-    String updateProduct(Long id, Product request);
+    String updateProduct(Long id, ProductRequest request);
 }

@@ -1,5 +1,6 @@
 package com.ali.commerce.service.impl;
 
+import com.ali.commerce.dto.request.ProductRequest;
 import com.ali.commerce.dto.response.ProductResponse;
 import com.ali.commerce.entity.Product;
 import com.ali.commerce.mapper.ProductMapper;
@@ -37,10 +38,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public String addProduct(Product request) {
-        // Optional: Check if a product with the exact same name already exists
+    public String addProduct(ProductRequest request) { // Changed here
         if (productRepository.existsByName(request.getName())) {
-            throw new RuntimeException("Product already exists with name: " + request.getName()); // Replace with DuplicateProductException later
+            throw new RuntimeException("Product already exists with name: " + request.getName());
         }
 
         Product product = productMapper.toEntity(request);
@@ -59,7 +59,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public String updateProduct(Long id, Product request) {
+    public String updateProduct(Long id, ProductRequest request) { // Changed here
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
 
