@@ -20,7 +20,7 @@ public class UserMapper {
         // IMPORTANT: The password here is still plain-text.
         // It MUST be encoded in the Service layer before calling repository.save()
         user.setPassword(request.getPassword());
-        user.setRole(request.getRole());
+        user.setRole("CUSTOMER");
 
         return user;
     }

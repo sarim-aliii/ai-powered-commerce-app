@@ -2,7 +2,6 @@ package com.ali.commerce.controller;
 
 import com.ali.commerce.dto.response.UserResponse;
 import com.ali.commerce.dto.request.UserRequest;
-import com.ali.commerce.entity.User;
 import com.ali.commerce.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
