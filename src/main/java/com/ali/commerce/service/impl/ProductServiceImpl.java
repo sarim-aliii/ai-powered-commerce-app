@@ -93,4 +93,11 @@ public class ProductServiceImpl implements ProductService {
 
         return "Product updated successfully";
     }
+
+    @Override
+    public List<ProductResponse> searchProducts(String keyword) {
+        return productRepository.findByNameContainingIgnoreCase(keyword).stream()
+                .map(productMapper::toResponse)
+                .collect(Collectors.toList());
+    }
 }

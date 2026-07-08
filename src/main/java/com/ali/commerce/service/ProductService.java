@@ -16,4 +16,6 @@ public interface ProductService {
     List<ProductResponse> getAllProducts();
 
     String updateProduct(Long id, ProductRequest request);
+
+    List<ProductResponse> searchProducts(String query);
 }
