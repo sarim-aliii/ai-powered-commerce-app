@@ -38,6 +38,9 @@ public class Product {
 
     private LocalDateTime updatedAt;
 
+    @Column(length = 1000)
+    private String imageUrl;
+
     // Automates timestamps on creation
     @PrePersist
     protected void onCreate() {

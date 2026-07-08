@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -59,5 +60,15 @@ public class ProductController {
     @GetMapping("/search")
     public ResponseEntity<List<ProductResponse>> searchProducts(@RequestParam String query) {
         return ResponseEntity.ok(productService.searchProducts(query));
+    }
+
+    @PostMapping("/{id}/image")
+    public ResponseEntity<String> uploadProductImage(
+            @PathVariable Long id,
+            @RequestParam("file") MultipartFile file) {
+
+        productService.updateProductImage(id, file);
+
+        return ResponseEntity.ok("Image uploaded successfully");
     }
 }

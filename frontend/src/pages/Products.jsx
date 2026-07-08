@@ -3,12 +3,15 @@ import { ShoppingCart, PackageSearch, Search } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../services/api';
 import debounce from 'lodash/debounce';
+import { useNavigate } from 'react-router-dom';
+
 
 const Products = () => {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [addingToCart, setAddingToCart] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
         // Initial fetch
@@ -89,10 +92,19 @@ const Products = () => {
                 {products.map(product => (
                     <div
                         key={product.id}
+                        onClick={() => navigate(`/products/${product.id}`)}
                         className="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col"
                     >
                         <div className="h-48 bg-gray-50 flex items-center justify-center border-b border-gray-100">
-                            <PackageSearch size={40} className="text-gray-300" />
+                            {product.imageUrl ? (
+                                <img
+                                    src={product.imageUrl}
+                                    alt={product.name}
+                                    className="h-full w-full object-cover"
+                                />
+                            ) : (
+                                <PackageSearch size={40} className="text-gray-300" />
+                            )}
                         </div>
 
                         <div className="p-5 flex-grow flex flex-col">
@@ -111,7 +123,10 @@ const Products = () => {
                                     ${product.price.toFixed(2)}
                                 </span>
                                 <button
-                                    onClick={() => addToCart(product.id)}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        addToCart(product.id);
+                                    }}
                                     disabled={addingToCart === product.id}
                                     className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
                                         addingToCart === product.id

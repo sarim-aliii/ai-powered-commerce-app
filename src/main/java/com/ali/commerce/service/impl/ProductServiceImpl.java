@@ -9,8 +9,10 @@ import com.ali.commerce.entity.Product;
 import com.ali.commerce.mapper.ProductMapper;
 import com.ali.commerce.repository.ProductRepository;
 import com.ali.commerce.service.ProductService;
+import com.ali.commerce.service.CloudinaryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +24,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductMapper productMapper;
     private final CategoryRepository categoryRepository;
+    private final CloudinaryService cloudinaryService;
 
     @Override
     public ProductResponse getProductById(Long id) {
@@ -99,5 +102,22 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findByNameContainingIgnoreCase(keyword).stream()
                 .map(productMapper::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void updateProductImage(Long id, MultipartFile file) {
+        try {
+            String imageUrl = cloudinaryService.uploadFile(file);
+
+            Product product = productRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Product not found"));
+
+            product.setImageUrl(imageUrl);
+            productRepository.save(product);
+
+        } catch (java.io.IOException e) {
+            // Catch the checked exception and wrap it in a RuntimeException
+            throw new RuntimeException("Failed to upload image to Cloudinary", e);
+        }
     }
 }
