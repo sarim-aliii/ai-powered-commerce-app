@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import api from '../services/api';
 import debounce from 'lodash/debounce';
 import { useNavigate } from 'react-router-dom';
-
+import VisualSearchUploader from '../components/VisualSearchUploader';
 
 const Products = () => {
     const [products, setProducts] = useState([]);
@@ -74,7 +74,6 @@ const Products = () => {
                 New Arrivals
             </h1>
 
-            {/* Search Input - Cleaned up */}
             <div className="mb-8 relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Search className="h-5 w-5 text-gray-400" />
@@ -85,6 +84,12 @@ const Products = () => {
                     value={searchQuery}
                     onChange={handleInputChange}
                     className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none shadow-sm transition-all"
+                />
+
+                <VisualSearchUploader
+                    onSearchResults={(matchedProducts) => {
+                        setProducts(matchedProducts);
+                    }}
                 />
             </div>
 

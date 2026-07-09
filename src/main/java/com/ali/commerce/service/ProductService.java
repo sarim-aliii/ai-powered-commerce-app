@@ -21,4 +21,6 @@ public interface ProductService {
     List<ProductResponse> searchProducts(String query);
 
     void updateProductImage(Long id, MultipartFile file);
+
+    List<ProductResponse> getProductsByIds(List<Long> ids);
 }

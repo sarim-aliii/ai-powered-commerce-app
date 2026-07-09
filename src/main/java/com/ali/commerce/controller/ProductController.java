@@ -9,6 +9,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+import com.ali.commerce.dto.response.VisualSearchResponse;
 
 import java.util.List;
 
@@ -70,5 +77,33 @@ public class ProductController {
         productService.updateProductImage(id, file);
 
         return ResponseEntity.ok("Image uploaded successfully");
+    }
+
+    @PostMapping("/search/visual")
+    public ResponseEntity<List<ProductResponse>> visualSearch(@RequestParam("file") MultipartFile file) {
+        // 1. Prepare the image to send to Python
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+        body.add("file", file.getResource());
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+
+        // 2. Ask Python for the similar IDs
+        VisualSearchResponse pythonResponse = restTemplate.postForObject(
+                "http://localhost:8000/search",
+                requestEntity,
+                VisualSearchResponse.class
+        );
+
+        // 3. Get the actual full product details from your database using those IDs
+        List<Long> similarIds = pythonResponse.getSimilarProductIds();
+
+        // Note: You will need to make sure your ProductService has a method
+        // like getProductsByIds(List<Long> ids) to fetch these from the database.
+        List<ProductResponse> products = productService.getProductsByIds(similarIds);
+
+        return ResponseEntity.ok(products);
     }
 }

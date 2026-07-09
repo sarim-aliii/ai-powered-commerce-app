@@ -11,7 +11,14 @@ import com.ali.commerce.repository.ProductRepository;
 import com.ali.commerce.service.ProductService;
 import com.ali.commerce.service.CloudinaryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -32,6 +39,15 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + id)); // You can replace this with ProductNotFoundException later
 
         return productMapper.toResponse(product);
+    }
+
+    @Override
+    public List<ProductResponse> getProductsByIds(List<Long> ids) {
+        List<Product> products = productRepository.findAllById(ids);
+
+        return products.stream()
+                .map(productMapper::toResponse)
+                .toList();
     }
 
     @Override
@@ -107,6 +123,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void updateProductImage(Long id, MultipartFile file) {
         try {
+            // 1. Upload to Cloudinary
             String imageUrl = cloudinaryService.uploadFile(file);
 
             Product product = productRepository.findById(id)
@@ -115,9 +132,35 @@ public class ProductServiceImpl implements ProductService {
             product.setImageUrl(imageUrl);
             productRepository.save(product);
 
+            // 2. Send to Python Microservice for indexing
+            try {
+                RestTemplate restTemplate = new RestTemplate();
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+                MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+
+                ByteArrayResource fileAsResource = new ByteArrayResource(file.getBytes()) {
+                    @Override
+                    public String getFilename() {
+                        return file.getOriginalFilename() != null ? file.getOriginalFilename() : "image.jpg";
+                    }
+                };
+
+                body.add("file", fileAsResource);
+
+                HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+                String pythonUrl = "http://localhost:8000/index-product?product_id=" + id;
+
+                restTemplate.postForEntity(pythonUrl, requestEntity, String.class);
+                System.out.println("Successfully sent image to AI for indexing!");
+
+            } catch (Exception e) {
+                System.err.println("Failed to index image for visual search: " + e.getMessage());
+            }
+
         } catch (java.io.IOException e) {
-            // Catch the checked exception and wrap it in a RuntimeException
-            throw new RuntimeException("Failed to upload image to Cloudinary", e);
+            throw new RuntimeException("Failed to upload image", e);
         }
     }
 }
