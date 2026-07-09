@@ -31,7 +31,7 @@ const ProductDetail = () => {
     const addToCart = async () => {
         setAddingToCart(true);
         try {
-            await api.post(`/carts/user/2/add`, { productId: product.id, quantity: 1 });
+            await api.post(`/carts/user/${user.id}/add`, { productId, quantity: 1 });
             toast.success('Added to cart!');
         } catch (err) {
             toast.error('Could not add item.');

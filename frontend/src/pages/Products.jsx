@@ -6,6 +6,7 @@ import debounce from 'lodash/debounce';
 import { useNavigate } from 'react-router-dom';
 import VisualSearchUploader from '../components/VisualSearchUploader';
 import SkeletonLoader from '../components/SkeletonLoader';
+import { useAuth } from '../context/AuthContext';
 
 const Products = () => {
     const [products, setProducts] = useState([]);
@@ -13,6 +14,7 @@ const Products = () => {
     const [addingToCart, setAddingToCart] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const navigate = useNavigate();
+    const { user } = useAuth();
 
     useEffect(() => {
         // Initial fetch
@@ -45,14 +47,19 @@ const Products = () => {
 
     const handleInputChange = (e) => {
         const value = e.target.value;
-        setSearchQuery(value); // Update UI immediately
-        fetchSearchResults(value); // Fire debounced API call
+        setSearchQuery(value);
+        fetchSearchResults(value);
     };
 
     const addToCart = async (productId) => {
+        if (!user || !user.id) {
+            toast.error("Please log in to add items to your cart.");
+            return;
+        }
+
         setAddingToCart(productId);
         try {
-            await api.post(`/carts/user/2/add`, { productId, quantity: 1 });
+            await api.post(`/carts/user/${user.id}/add`, { productId, quantity: 1 });
             toast.success('Added to cart!');
         } catch (err) {
             toast.error('Could not add item.');
@@ -72,10 +79,6 @@ const Products = () => {
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight mb-8">
-                New Arrivals
-            </h1>
-
             <div className="mb-8 relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Search className="h-5 w-5 text-gray-400" />
@@ -100,14 +103,14 @@ const Products = () => {
                     <div
                         key={product.id}
                         onClick={() => navigate(`/products/${product.id}`)}
-                        className="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col"
+                        className="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col cursor-pointer"
                     >
-                        <div className="h-48 bg-gray-50 flex items-center justify-center border-b border-gray-100">
+                        <div className="h-48 bg-gray-50 flex items-center justify-center border-b border-gray-100 overflow-hidden relative">
                             {product.imageUrl ? (
                                 <img
                                     src={product.imageUrl}
                                     alt={product.name}
-                                    className="h-full w-full object-cover"
+                                    className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
                                 />
                             ) : (
                                 <PackageSearch size={40} className="text-gray-300" />
@@ -116,7 +119,7 @@ const Products = () => {
 
                         <div className="p-5 flex-grow flex flex-col">
                             <span className="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-1">
-                                {product.brand}
+                                {product.brand || 'Generic'}
                             </span>
                             <h3 className="text-lg font-bold text-gray-900 mb-2 leading-tight">
                                 {product.name}
@@ -127,7 +130,7 @@ const Products = () => {
 
                             <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-50">
                                 <span className="text-xl font-black text-gray-900">
-                                    ${product.price.toFixed(2)}
+                                    ${product.price ? product.price.toFixed(2) : '0.00'}
                                 </span>
                                 <button
                                     onClick={(e) => {
@@ -149,6 +152,13 @@ const Products = () => {
                     </div>
                 ))}
             </div>
+
+            {/* Empty State for Search */}
+            {products.length === 0 && (
+                <div className="text-center py-20 text-gray-500">
+                    No products found.
+                </div>
+            )}
         </div>
     );
 };
