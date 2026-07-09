@@ -70,4 +70,13 @@ public class AdminController {
     public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
         return ResponseEntity.ok(productService.deleteById(id));
     }
+
+    @PutMapping("/orders/{id}/status")
+    public ResponseEntity<String> updateOrderStatus(
+            @PathVariable Long id,
+            @RequestParam String status) {
+
+        String response = orderService.updateOrderStatus(id, status);
+        return ResponseEntity.ok(response);
+    }
 }

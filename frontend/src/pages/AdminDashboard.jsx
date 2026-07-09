@@ -59,6 +59,16 @@ const AdminDashboard = () => {
         }
     };
 
+    const handleStatusUpdate = async (orderId, newStatus) => {
+        try {
+            await api.put(`/admin/orders/${orderId}/status?status=${newStatus}`);
+            toast.success(`Order #${orderId} marked as ${newStatus}`);
+            fetchAdminData();
+        } catch (err) {
+            toast.error("Failed to update order status");
+        }
+    };
+
     return (
         <div className="max-w-7xl mx-auto px-4 py-8 relative">
             <h1 className="text-3xl font-extrabold mb-8">Admin Control Panel</h1>
@@ -83,9 +93,54 @@ const AdminDashboard = () => {
 
                 {/* Orders Tab */}
                 {activeTab === 'orders' && (
-                    <table className="w-full text-left">
-                        {/* ... your existing orders table code ... */}
-                    </table>
+                    <div className="overflow-x-auto">
+                        <table className="w-full text-left">
+                        <thead>
+                                <tr className="border-b text-gray-600">
+                                    <th className="pb-4 font-semibold p-4">Order ID</th>
+                                    <th className="pb-4 font-semibold p-4">Date</th>
+                                    <th className="pb-4 font-semibold p-4">Total</th>
+                                    <th className="pb-4 font-semibold p-4">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {orders.map(order => (
+                                    <tr key={order.id} className="border-b hover:bg-gray-50 transition-colors">
+                                        <td className="py-4 p-4 text-gray-500 font-medium">#{order.id}</td>
+                                        <td className="py-4 p-4 text-gray-600">
+                                            {new Date(order.createdAt).toLocaleDateString()}
+                                        </td>
+                                        <td className="py-4 p-4 font-bold text-gray-800">
+                                            ${order.totalAmount ? order.totalAmount.toFixed(2) : '0.00'}
+                                        </td>
+                                        <td className="py-4 p-4">
+                                            {/* Dynamic Status Dropdown */}
+                                            <select
+                                                value={order.status || 'PENDING'}
+                                                onChange={(e) => handleStatusUpdate(order.id, e.target.value)}
+                                                className={`p-2 rounded-lg text-xs font-bold outline-none border cursor-pointer transition-colors ${
+                                                    order.status === 'DELIVERED' ? 'bg-green-100 text-green-700 border-green-200' :
+                                                    order.status === 'SHIPPED' ? 'bg-blue-100 text-blue-700 border-blue-200' :
+                                                    order.status === 'CANCELLED' ? 'bg-red-100 text-red-700 border-red-200' :
+                                                    'bg-yellow-100 text-yellow-700 border-yellow-200'
+                                                }`}
+                                            >
+                                                <option value="PENDING">PENDING</option>
+                                                <option value="SHIPPED">SHIPPED</option>
+                                                <option value="DELIVERED">DELIVERED</option>
+                                                <option value="CANCELLED">CANCELLED</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                        {orders.length === 0 && (
+                            <div className="text-center py-12 text-gray-500">
+                                No orders have been placed yet.
+                            </div>
+                        )}
+                    </div>
                 )}
 
                 {/* Products Tab */}

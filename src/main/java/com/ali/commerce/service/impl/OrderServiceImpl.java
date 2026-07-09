@@ -114,17 +114,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public String updateOrderStatus(Long id, String status) {
-        Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
-
-        order.setStatus(status.toUpperCase());
-        orderRepository.save(order);
-
-        return "Order status updated successfully to " + status.toUpperCase();
-    }
-
-    @Override
     public void deleteOrder(Long id) {
         if (!orderRepository.existsById(id)) {
             throw new RuntimeException("Order not found with id: " + id);
@@ -192,5 +181,17 @@ public class OrderServiceImpl implements OrderService {
         cartRepository.save(cart);
 
         return orderMapper.toResponse(savedOrder);
+    }
+
+    @Override
+    public String updateOrderStatus(Long orderId, String status) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found with id: " + orderId));
+
+        // Ensure the status is always uppercase (e.g., "SHIPPED")
+        order.setStatus(status.toUpperCase());
+        orderRepository.save(order);
+
+        return "Order " + orderId + " marked as " + status.toUpperCase();
     }
 }
