@@ -12,6 +12,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.io.IOException;
 
@@ -33,45 +36,35 @@ public class JwtFilter extends OncePerRequestFilter {
         final String jwt;
         final String userEmail;
 
-        // 1. Check if the Authorization header is missing or lacks the "Bearer " prefix
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response); // Move to the next filter
+            filterChain.doFilter(request, response);
             return;
         }
 
-        // 2. Extract the token by removing "Bearer " (which is 7 characters long)
         jwt = authHeader.substring(7);
-
-        // 3. Extract the user's email from the JWT
         userEmail = jwtService.extractUsername(jwt);
 
-        // 4. If the email exists and the user is not already authenticated in this session
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-
-            // Fetch the user details from the database
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
 
-            // 5. Validate the token against the user details
             if (jwtService.isTokenValid(jwt, userDetails)) {
+                List<String> roles = jwtService.extractRoles(jwt);
+                List<SimpleGrantedAuthority> authorities = roles.stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
 
-                // Create an authentication token
+                // Pass the extracted authorities into the Token
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,
-                        userDetails.getAuthorities()
+                        authorities
                 );
 
-                // Attach the details of the incoming request (like IP address, session ID)
-                authToken.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request)
-                );
-
-                // 6. Update the Spring Security Context with the authenticated user
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
 
-        // 7. Continue processing the request
         filterChain.doFilter(request, response);
     }
 }

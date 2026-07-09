@@ -61,24 +61,24 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public String addProduct(ProductRequest request) {
-        if (productRepository.existsByName(request.getName())) {
-            throw new RuntimeException("Product already exists with name: " + request.getName());
-        }
+    public Long addProduct(ProductRequest request) {
+        // 1. Map your request to the entity (you likely already have this logic)
+        Product product = new Product();
+        product.setName(request.getName());
+        product.setDescription(request.getDescription());
+        product.setPrice(request.getPrice());
+        product.setQuantity(request.getQuantity());
+        product.setBrand(request.getBrand());
 
-        // 1. Fetch the category from the database
+        // Fetch and set the category
         Category category = categoryRepository.findById(request.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found with id: " + request.getCategoryId()));
-
-        // 2. Map the request to a Product entity
-        Product product = productMapper.toEntity(request);
-
-        // 3. Attach the actual Category entity to the Product
+                .orElseThrow(() -> new RuntimeException("Category not found"));
         product.setCategory(category);
 
-        productRepository.save(product);
+        // 2. Save the product to the database
+        Product savedProduct = productRepository.save(product);
 
-        return "Product added successfully";
+        return savedProduct.getId();
     }
 
     @Override

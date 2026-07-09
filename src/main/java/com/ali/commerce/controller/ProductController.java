@@ -29,8 +29,8 @@ public class ProductController {
     // Create a new product
     @PostMapping
     public ResponseEntity<String> addProduct(@Valid @RequestBody ProductRequest request) {
-        String response = productService.addProduct(request);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        Long newProductId = productService.addProduct(request); // Capture the Long ID
+        return new ResponseEntity<>("Product created successfully with ID: " + newProductId, HttpStatus.CREATED);
     }
 
     // Get a specific product by ID

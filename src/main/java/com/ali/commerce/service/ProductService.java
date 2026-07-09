@@ -12,7 +12,7 @@ public interface ProductService {
 
     String deleteById(Long id);
 
-    String addProduct(ProductRequest request);
+    Long addProduct(ProductRequest request);
 
     List<ProductResponse> getAllProducts();
 

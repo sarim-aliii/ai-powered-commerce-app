@@ -10,6 +10,7 @@ import Cart from './pages/Cart';
 import ProductDetail from './pages/ProductDetail';
 import { AuthProvider } from './context/AuthContext';
 import AIChatbot from './components/AIChatbot';
+import AdminDashboard from './pages/AdminDashboard';
 
 function App() {
   return (
@@ -36,6 +37,11 @@ function App() {
             <ProtectedRoute>
               <ProductDetail />
             </ProtectedRoute>
+          } />
+          <Route path="/admin" element={
+              <ProtectedRoute adminOnly={true}>
+                  <AdminDashboard />
+              </ProtectedRoute>
           } />
         </Routes>
 

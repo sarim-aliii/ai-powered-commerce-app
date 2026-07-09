@@ -16,11 +16,8 @@ public class UserMapper {
         User user = new User();
         user.setName(request.getName());
         user.setEmail(request.getEmail());
-
-        // IMPORTANT: The password here is still plain-text.
-        // It MUST be encoded in the Service layer before calling repository.save()
         user.setPassword(request.getPassword());
-        user.setRole("CUSTOMER");
+        user.setRole(User.Role.USER);
 
         return user;
     }
@@ -34,7 +31,7 @@ public class UserMapper {
                 .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
-                .role(user.getRole())
+                .role(user.getRole() != null ? user.getRole().name() : null)
                 .createdAt(user.getCreatedAt())
                 .build();
     }
@@ -46,9 +43,14 @@ public class UserMapper {
 
         user.setName(request.getName());
         user.setEmail(request.getEmail());
-
-        // Again, ensure the password is encrypted in the service layer if it is being updated
         user.setPassword(request.getPassword());
-        user.setRole(request.getRole());
+
+        if (request.getRole() != null) {
+            try {
+                user.setRole(User.Role.valueOf(request.getRole().toUpperCase()));
+            } catch (IllegalArgumentException e) {
+                user.setRole(User.Role.USER);
+            }
+        }
     }
 }

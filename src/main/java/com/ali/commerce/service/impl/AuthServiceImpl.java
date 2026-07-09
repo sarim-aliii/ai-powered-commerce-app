@@ -36,12 +36,18 @@ public class AuthServiceImpl implements AuthService {
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        // Default to CUSTOMER if no role is provided
-        user.setRole(request.getRole() != null ? request.getRole().toUpperCase() : "CUSTOMER");
+        if (request.getRole() != null) {
+            try {
+                user.setRole(User.Role.valueOf(request.getRole().toUpperCase()));
+            } catch (IllegalArgumentException e) {
+                user.setRole(User.Role.USER);
+            }
+        } else {
+            user.setRole(User.Role.USER);
+        }
 
         userRepository.save(user);
 
-        // Generate the JWT token for the newly registered user
         UserDetails userDetails = userDetailsService.loadUserByUsername(user.getEmail());
         String jwtToken = jwtService.generateToken(userDetails);
 
@@ -50,7 +56,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse authenticate(AuthRequest request) {
-        // This will automatically check the password against the encoded password in the database
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -58,7 +63,6 @@ public class AuthServiceImpl implements AuthService {
                 )
         );
 
-        // If we reach here, the password is correct. Fetch the user and generate a token.
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
         String jwtToken = jwtService.generateToken(userDetails);
 

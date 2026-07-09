@@ -24,14 +24,19 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    public enum Role {
+        USER, ADMIN
+    }
+
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private String role; // Consider using an Enum here later (e.g., CUSTOMER, ADMIN)
-
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
 
     // This method automatically sets the timestamp before saving to the database
     @PrePersist

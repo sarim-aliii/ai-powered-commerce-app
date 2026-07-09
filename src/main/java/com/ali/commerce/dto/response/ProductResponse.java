@@ -21,6 +21,7 @@ public class ProductResponse {
     private String categoryName;
 
     private String brand;
+    private String imageUrl;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
