@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ShoppingCart, PackageSearch, ArrowLeft, ShieldCheck, Truck } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../services/api';
+import DetailSkeleton from '../components/DetailSkeleton';
+
 
 const ProductDetail = () => {
     const { id } = useParams();
@@ -40,8 +42,8 @@ const ProductDetail = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen flex justify-center items-center">
-                <PackageSearch size={48} className="animate-pulse text-gray-400" />
+            <div className="py-12">
+                <DetailSkeleton />
             </div>
         );
     }
