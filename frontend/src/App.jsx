@@ -9,6 +9,7 @@ import Products from './pages/Products';
 import Cart from './pages/Cart';
 import ProductDetail from './pages/ProductDetail';
 import { AuthProvider } from './context/AuthContext';
+import AIChatbot from './components/AIChatbot';
 
 function App() {
   return (
@@ -16,7 +17,8 @@ function App() {
     <Router>
       <div>
         <Toaster position="bottom-right" reverseOrder={false} />
-        <Navbar /> {/*  */}
+        <Navbar />
+
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<Login />} />
@@ -36,6 +38,8 @@ function App() {
             </ProtectedRoute>
           } />
         </Routes>
+
+        <AIChatbot />
       </div>
      </Router>
   </AuthProvider>

@@ -5,6 +5,10 @@ from torchvision.models import resnet50, ResNet50_Weights
 from PIL import Image
 import io
 import faiss
+from google import genai
+from pydantic import BaseModel
+import os
+from dotenv import load_dotenv
 
 app = FastAPI()
 
@@ -63,3 +67,41 @@ async def search_similar(file: UploadFile = File(...)):
             results.append(product_ids_map[idx])
 
     return {"similar_product_ids": results}
+
+# --- NEW CUSTOMER SUPPORT CHATBOT CODE ---
+load_dotenv(dotenv_path="../.env")
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
+if not GEMINI_API_KEY:
+    print("WARNING: GEMINI_API_KEY not found in .env file!")
+
+client = genai.Client(api_key=GEMINI_API_KEY)
+
+class ChatRequest(BaseModel):
+    message: str
+
+@app.post("/chat")
+async def customer_support_chat(request: ChatRequest):
+    system_context = """
+    You are a friendly, helpful customer support agent for an online e-commerce store.
+    Store Rules:
+    - Standard shipping takes 3-5 business days. Express takes 1-2 days.
+    - We offer a 30-day return policy for unused items in original packaging.
+    - If you don't know the answer, politely ask the user to email support@ecommerce.com.
+    - Keep your answers concise, professional, and friendly.
+
+    Customer message:
+    """
+
+    full_prompt = system_context + request.message
+
+    try:
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=full_prompt,
+        )
+        return {"reply": response.text}
+    except Exception as e:
+        print(f"AI Error: {e}")
+        return {"reply": "I'm sorry, our support system is currently experiencing issues. Please try again later."}
