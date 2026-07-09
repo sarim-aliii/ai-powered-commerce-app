@@ -56,6 +56,16 @@ public class AdminController {
         return ResponseEntity.ok("Product added successfully");
     }
 
+    @PutMapping("/products/{id}")
+    public ResponseEntity<String> updateProduct(
+            @PathVariable Long id,
+            @RequestBody ProductRequest request) {
+
+        // Calls the existing update logic in your ProductService
+        String response = productService.updateProduct(id, request);
+        return ResponseEntity.ok(response);
+    }
+
     @DeleteMapping("/products/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
         return ResponseEntity.ok(productService.deleteById(id));

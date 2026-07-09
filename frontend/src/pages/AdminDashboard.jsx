@@ -3,6 +3,7 @@ import { Package, ShoppingBag, List, Trash2, Plus } from 'lucide-react';
 import api from '../services/api';
 import toast from 'react-hot-toast';
 import AddProductForm from '../components/AddProductForm';
+import EditProductForm from '../components/EditProductForm';
 
 const AdminDashboard = () => {
     const [orders, setOrders] = useState([]);
@@ -11,6 +12,7 @@ const AdminDashboard = () => {
     const [showAddModal, setShowAddModal] = useState(false);
     const [categories, setCategories] = useState([]);
     const [newCategory, setNewCategory] = useState({ name: '', description: '' });
+    const [editingProduct, setEditingProduct] = useState(null);
 
     const fetchAdminData = async () => {
         try {
@@ -38,7 +40,7 @@ const AdminDashboard = () => {
             try {
                 await api.delete(`/admin/products/${productId}`);
                 toast.success("Product deleted");
-                fetchAdminData(); // ✨ FIX: Refresh the list immediately
+                fetchAdminData();
             } catch (err) {
                 toast.error("Failed to delete");
             }
@@ -122,7 +124,13 @@ const AdminDashboard = () => {
                                         <td className="py-4 text-gray-500">{product.brand}</td>
                                         <td className="py-4">${product.price.toFixed(2)}</td>
                                         <td className="py-4">
-                                            <button onClick={() => handleDelete(product.id)} className="text-gray-400 hover:text-red-600 transition-colors p-2">
+                                            <button onClick={() => setEditingProduct(product)}
+                                                    className="text-blue-500 hover:text-blue-700 font-medium"
+                                                >
+                                                    Edit
+                                                </button>
+                                            <button onClick={() => handleDelete(product.id)}
+                                                    className="text-gray-400 hover:text-red-600 transition-colors p-2">
                                                 <Trash2 size={18} />
                                             </button>
                                         </td>
@@ -193,6 +201,14 @@ const AdminDashboard = () => {
             {showAddModal && (
                 <AddProductForm
                     onClose={() => setShowAddModal(false)}
+                    onRefresh={fetchAdminData}
+                />
+            )}
+
+            {editingProduct && (
+                <EditProductForm
+                    product={editingProduct}
+                    onClose={() => setEditingProduct(null)}
                     onRefresh={fetchAdminData}
                 />
             )}
