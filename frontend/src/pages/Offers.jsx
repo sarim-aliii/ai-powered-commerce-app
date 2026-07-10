@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Tag, Copy, Scissors, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../services/api';
@@ -13,7 +13,7 @@ const Offers = () => {
                 // Fetching active coupons from our new endpoint
                 const response = await api.get('/coupons/active');
                 setCoupons(response.data);
-            } catch (err) {
+            } catch () {
                 toast.error("Failed to load offers");
             } finally {
                 setLoading(false);

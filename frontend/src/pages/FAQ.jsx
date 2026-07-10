@@ -1,4 +1,3 @@
-import React from 'react';
 import FAQItem from '../components/FAQItem';
 import { HelpCircle } from 'lucide-react';
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     ShoppingCart, Trash2, CreditCard, PackageSearch, ShieldCheck, Tag, Ticket
@@ -27,7 +27,7 @@ const Cart = () => {
         try {
             const response = await api.get(`/carts/user/${user.id}`);
             setCart(response.data);
-        } catch (err) {
+        } catch () {
             toast.error("Failed to fetch cart");
         } finally {
             setLoading(false);
@@ -39,7 +39,7 @@ const Cart = () => {
             await api.delete(`/carts/user/${user.id}/remove/${productId}`);
             toast.success('Item removed');
             fetchCart();
-        } catch (err) {
+        } catch () {
             toast.error('Failed to remove item');
         }
     };
@@ -50,7 +50,7 @@ const Cart = () => {
             await api.post('/orders/checkout', { userId: user.id, shippingAddress: '123 React Street, Web City' });
             toast.success('Order placed successfully!');
             navigate('/products');
-        } catch (err) {
+        } catch () {
             toast.error('Checkout failed');
         } finally {
             setIsCheckingOut(false);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ShoppingCart, PackageSearch, ArrowLeft, ShieldCheck, Truck } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -19,7 +19,7 @@ const ProductDetail = () => {
             try {
                 const response = await api.get(`/products/${id}`);
                 setProduct(response.data);
-            } catch (err) {
+            } catch () {
                 toast.error('Failed to load product details');
                 navigate('/products');
             } finally {
@@ -35,7 +35,7 @@ const ProductDetail = () => {
             // Change 'productId' to 'productId: id' mapping to the variable from useParams()
             await api.post(`/carts/user/${user.id}/add`, { productId: id, quantity: 1 });
             toast.success('Added to cart!');
-        } catch (err) {
+        } catch () {
             toast.error('Could not add item.');
         } finally {
             setAddingToCart(false);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, LogIn, ShoppingBag, Sparkles } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -20,7 +20,7 @@ const Login = () => {
             login(response.data.token);
             toast.success('Welcome back!');
             navigate('/products');
-        } catch (err) {
+        } catch () {
             toast.error('Invalid credentials. Please try again.');
         } finally {
             setLoading(false);

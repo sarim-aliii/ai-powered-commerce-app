@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Package, ShoppingBag, List, Trash2, Plus } from 'lucide-react';
+import  { useState, useEffect } from 'react';
+import { Trash2, Plus } from 'lucide-react';
 import api from '../services/api';
 import toast from 'react-hot-toast';
 import AddProductForm from '../components/AddProductForm';
@@ -26,7 +26,7 @@ const AdminDashboard = () => {
                 const res = await api.get('/admin/categories'); // Fetch categories here
                 setCategories(res.data);
             }
-        } catch (err) {
+        } catch () {
             toast.error("Failed to load data");
         }
     };
@@ -41,7 +41,7 @@ const AdminDashboard = () => {
                 await api.delete(`/admin/products/${productId}`);
                 toast.success("Product deleted");
                 fetchAdminData();
-            } catch (err) {
+            } catch () {
                 toast.error("Failed to delete");
             }
         }
@@ -54,7 +54,7 @@ const AdminDashboard = () => {
             toast.success("Category added successfully!");
             setNewCategory({ name: '', description: '' }); // Clear the form
             fetchAdminData(); // Refresh the list
-        } catch (err) {
+        } catch () {
             toast.error("Failed to add category");
         }
     };
@@ -64,7 +64,7 @@ const AdminDashboard = () => {
             await api.put(`/admin/orders/${orderId}/status?status=${newStatus}`);
             toast.success(`Order #${orderId} marked as ${newStatus}`);
             fetchAdminData();
-        } catch (err) {
+        } catch () {
             toast.error("Failed to update order status");
         }
     };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { ShoppingCart, PackageSearch, Search } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../services/api';
@@ -22,7 +22,7 @@ const Products = () => {
             try {
                 const response = await api.get('/products');
                 setProducts(response.data);
-            } catch (err) {
+            } catch () {
                 toast.error('Failed to load products');
             } finally {
                 setLoading(false);
@@ -38,7 +38,7 @@ const Products = () => {
                 const endpoint = query.trim() ? `/products/search?query=${query}` : '/products';
                 const response = await api.get(endpoint);
                 setProducts(response.data);
-            } catch (err) {
+            } catch () {
                 toast.error('Search failed');
             }
         }, 300),
@@ -61,7 +61,7 @@ const Products = () => {
         try {
             await api.post(`/carts/user/${user.id}/add`, { productId, quantity: 1 });
             toast.success('Added to cart!');
-        } catch (err) {
+        } catch () {
             toast.error('Could not add item.');
         } finally {
             setAddingToCart(null);

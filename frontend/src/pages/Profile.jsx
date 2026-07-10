@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { User, MapPin, CreditCard, Package, LogOut, Sparkles, Wallet, Plus } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
@@ -23,7 +23,7 @@ const Profile = () => {
             try {
                 const response = await api.get('/users/profile');
                 setProfileData(response.data);
-            } catch (err) {
+            } catch () {
                 toast.error("Failed to load profile data");
             } finally {
                 setLoading(false);
@@ -39,7 +39,7 @@ const Profile = () => {
                 try {
                     const response = await api.get('/orders/my-orders');
                     setOrders(response.data);
-                } catch (err) {
+                } catch () {
                     toast.error("Failed to load order history");
                 } finally {
                     setLoadingOrders(false);
@@ -49,7 +49,7 @@ const Profile = () => {
         }
     }, [activeTab]);
 
-    // ✨ NEW: Function to handle adding funds
+    // Function to handle adding funds
     const handleAddFunds = async (e) => {
         e.preventDefault();
         const amount = parseFloat(fundAmount);
