@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Upload, Loader2, CheckCircle } from 'lucide-react';
+import { useState } from 'react';
+import { Upload, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../services/api';
 

@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Bot, User } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { MessageCircle, X, Send, Bot } from 'lucide-react';
 import api from '../services/api';
 
 const AIChatbot = () => {
@@ -34,7 +34,7 @@ const AIChatbot = () => {
             const response = await api.post('/chat', { message: userMessage });
 
             setMessages(prev => [...prev, { sender: 'bot', text: response.data.reply }]);
-        } catch (err) {
+        } catch () {
             setMessages(prev => [...prev, { sender: 'bot', text: 'Oops! Connection lost. Please try again.' }]);
         } finally {
             setLoading(false);

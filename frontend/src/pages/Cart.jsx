@@ -21,7 +21,7 @@ const Cart = () => {
 
     useEffect(() => {
         if (user?.id) fetchCart();
-    }, [user?.id]);
+    }, [user?.id, fetchCart]);
 
     const fetchCart = async () => {
         try {

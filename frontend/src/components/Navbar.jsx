@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { ShoppingBag, ShoppingCart, LogOut, Package, User, ShieldCheck, Tag, HelpCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
