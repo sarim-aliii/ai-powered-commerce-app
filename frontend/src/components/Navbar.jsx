@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { ShoppingBag, ShoppingCart, LogOut, Package, User, ShieldCheck } from 'lucide-react';
+import {
+    ShoppingBag, ShoppingCart, LogOut, Package, User, ShieldCheck, Tag, HelpCircle
+} from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 
@@ -42,6 +44,12 @@ const Navbar = () => {
                         </Link>
                         <Link to="/cart" className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${isActive('/cart') ? 'bg-blue-50 text-blue-700' : 'text-gray-500 hover:text-gray-900'}`}>
                             <ShoppingCart className="h-5 w-5" /> Cart
+                        </Link>
+                        <Link to="/offers" className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${isActive('/offers') ? 'bg-blue-50 text-blue-700' : 'text-gray-500 hover:text-gray-900'}`}>
+                            <Tag className="h-5 w-5" /> Offers
+                        </Link>
+                        <Link to="/faq" className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${isActive('/faq') ? 'bg-blue-50 text-blue-700' : 'text-gray-500 hover:text-gray-900'}`}>
+                            <HelpCircle className="h-5 w-5" /> FAQs
                         </Link>
 
                         {/* Conditionally render Admin link if user has ROLE_ADMIN */}

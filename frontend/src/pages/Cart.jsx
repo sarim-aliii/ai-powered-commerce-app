@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-    ShoppingCart, Trash2, CreditCard, PackageSearch, ArrowRight, ShieldCheck, Tag
+    ShoppingCart, Trash2, CreditCard, PackageSearch, ShieldCheck, Tag, Ticket
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../services/api';
@@ -11,9 +11,13 @@ const Cart = () => {
     const { user } = useAuth();
     const [cart, setCart] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [address, setAddress] = useState('123 React Street, Web City');
     const [isCheckingOut, setIsCheckingOut] = useState(false);
     const navigate = useNavigate();
+
+    // Coupon states
+    const [couponCode, setCouponCode] = useState('');
+    const [discount, setDiscount] = useState(0);
+    const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
 
     useEffect(() => {
         if (user?.id) fetchCart();
@@ -43,7 +47,7 @@ const Cart = () => {
     const handleCheckout = async () => {
         setIsCheckingOut(true);
         try {
-            const response = await api.post('/orders/checkout', { userId: user.id, shippingAddress: address });
+            await api.post('/orders/checkout', { userId: user.id, shippingAddress: '123 React Street, Web City' });
             toast.success('Order placed successfully!');
             navigate('/products');
         } catch (err) {
@@ -52,6 +56,27 @@ const Cart = () => {
             setIsCheckingOut(false);
         }
     };
+
+    const handleApplyCoupon = async (e) => {
+        e.preventDefault();
+        if (!couponCode.trim()) return;
+
+        setIsValidatingCoupon(true);
+        try {
+            const response = await api.get(`/coupons/validate?code=${couponCode}`);
+            setDiscount(response.data.discountPercentage);
+            toast.success(`Coupon applied! ${response.data.discountPercentage}% OFF`);
+        } catch (err) {
+            setDiscount(0);
+            toast.error(err.response?.data?.message || 'Invalid coupon code');
+        } finally {
+            setIsValidatingCoupon(false);
+        }
+    };
+
+    const subtotal = cart?.cartTotal || 0;
+    const discountAmount = (subtotal * discount) / 100;
+    const finalTotal = subtotal - discountAmount;
 
     if (loading) return <div className="flex justify-center items-center h-64 text-gray-400"><PackageSearch size={48} className="animate-pulse"/></div>;
 
@@ -92,17 +117,61 @@ const Cart = () => {
                     ))}
                 </div>
 
-                <div className="lg:col-span-5 bg-gray-50 rounded-3xl p-8 border sticky top-24">
-                    <h2 className="text-xl font-extrabold mb-6">Order Summary</h2>
-                    <div className="space-y-4 mb-8 border-b pb-6 text-gray-600">
-                        <div className="flex justify-between"><span>Subtotal</span><span className="font-bold text-gray-900">${cart.cartTotal.toFixed(2)}</span></div>
+                {/* Right Column: Order Summary */}
+                <div className="lg:col-span-5 space-y-6 sticky top-24">
+
+                    {/* Promo Code Box */}
+                    <div className="bg-white rounded-3xl p-6 border shadow-sm">
+                        <form onSubmit={handleApplyCoupon} className="flex gap-2">
+                            <div className="relative flex-1">
+                                <Ticket className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                                <input
+                                    type="text"
+                                    placeholder="Got a promo code?"
+                                    value={couponCode}
+                                    onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                                    className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none uppercase font-mono text-sm"
+                                />
+                            </div>
+                            <button
+                                type="submit"
+                                disabled={isValidatingCoupon || !couponCode}
+                                className="px-6 py-3 bg-gray-900 text-white font-bold rounded-xl hover:bg-gray-800 disabled:opacity-50 transition-colors"
+                            >
+                                {isValidatingCoupon ? '...' : 'Apply'}
+                            </button>
+                        </form>
                     </div>
-                    <button onClick={handleCheckout} disabled={isCheckingOut} className="w-full py-4 bg-blue-600 text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-blue-700">
-                        <CreditCard size={20} /> {isCheckingOut ? 'Processing...' : 'Checkout Securely'}
-                    </button>
-                    <p className="mt-4 text-center text-sm text-gray-500 flex items-center justify-center gap-2">
-                        <ShieldCheck size={16} className="text-green-500" /> SSL Encrypted
-                    </p>
+
+                    {/* Order Summary Box */}
+                    <div className="bg-gray-50 rounded-3xl p-8 border">
+                        <h2 className="text-xl font-extrabold mb-6">Order Summary</h2>
+                        <div className="space-y-4 mb-8 border-b pb-6 text-gray-600">
+                            <div className="flex justify-between">
+                                <span>Subtotal</span>
+                                <span className="font-medium text-gray-900">${subtotal.toFixed(2)}</span>
+                            </div>
+
+                            {discount > 0 && (
+                                <div className="flex justify-between text-green-600 font-bold">
+                                    <span>Discount ({discount}%)</span>
+                                    <span>-${discountAmount.toFixed(2)}</span>
+                                </div>
+                            )}
+
+                            <div className="flex justify-between text-xl text-gray-900 pt-4 border-t">
+                                <span className="font-black">Total</span>
+                                <span className="font-black">${finalTotal.toFixed(2)}</span>
+                            </div>
+                        </div>
+
+                        <button onClick={handleCheckout} disabled={isCheckingOut} className="w-full py-4 bg-blue-600 text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-blue-700 transition-colors">
+                            <CreditCard size={20} /> {isCheckingOut ? 'Processing...' : 'Checkout Securely'}
+                        </button>
+                        <p className="mt-4 text-center text-sm text-gray-500 flex items-center justify-center gap-2">
+                            <ShieldCheck size={16} className="text-green-500" /> SSL Encrypted
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

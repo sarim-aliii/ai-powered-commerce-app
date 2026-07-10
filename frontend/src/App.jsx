@@ -13,6 +13,8 @@ import AIChatbot from './components/AIChatbot';
 import AdminDashboard from './pages/AdminDashboard';
 import Signup from './pages/Signup';
 import Profile from './pages/Profile';
+import Offers from './pages/Offers';
+import FAQ from './pages/faq';
 
 function App() {
   return (
@@ -51,6 +53,8 @@ function App() {
                   <Profile />
               </ProtectedRoute>
           } />
+          <Route path="/offers" element={<Offers />} />
+          <Route path="/faq" element={<FAQ />} />
         </Routes>
 
         <AIChatbot />
