@@ -163,10 +163,34 @@ const Profile = () => {
 
                     {/* 2. Order History Tab */}
                     {activeTab === 'orders' && (
-                        {/* Your existing orders UI here */}
+                        <div className="space-y-6">
+                            <h2 className="text-2xl font-bold text-gray-900 mb-6">Order History</h2>
+
+                            {loadingOrders ? (
+                                <div className="text-gray-500 font-medium">Loading orders...</div>
+                            ) : orders.length === 0 ? (
+                                <div className="text-gray-500">You haven't placed any orders yet.</div>
+                            ) : (
+                                <div className="space-y-4">
+                                    {orders.map(order => (
+                                        <div key={order.id} className="p-6 border border-gray-100 bg-gray-50 rounded-2xl">
+                                            <div className="flex justify-between items-center mb-4">
+                                                <span className="font-bold text-gray-900">Order #{order.id}</span>
+                                                <span className={`px-3 py-1 rounded-full text-xs font-bold ${order.status === 'PENDING' ? 'bg-yellow-100 text-yellow-700' : 'bg-green-100 text-green-700'}`}>
+                                                    {order.status}
+                                                </span>
+                                            </div>
+                                            <div className="text-sm text-gray-600">
+                                                Total: <span className="font-bold text-gray-900">${order.totalAmount?.toFixed(2)}</span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     )}
 
-                    {/* ✨ NEW: 3. Digital Wallet Tab */}
+                    {/* 3. Digital Wallet Tab */}
                     {activeTab === 'wallet' && (
                         <div className="space-y-6 max-w-lg">
                             <h2 className="text-2xl font-bold text-gray-900 mb-6">Digital Wallet</h2>

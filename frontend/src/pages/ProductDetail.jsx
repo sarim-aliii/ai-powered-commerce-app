@@ -4,7 +4,7 @@ import { ShoppingCart, PackageSearch, ArrowLeft, ShieldCheck, Truck } from 'luci
 import toast from 'react-hot-toast';
 import api from '../services/api';
 import DetailSkeleton from '../components/DetailSkeleton';
-
+import { useAuth } from '../context/AuthContext';
 
 const ProductDetail = () => {
     const { id } = useParams();
@@ -12,6 +12,7 @@ const ProductDetail = () => {
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [addingToCart, setAddingToCart] = useState(false);
+    const { user } = useAuth();
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -20,7 +21,7 @@ const ProductDetail = () => {
                 setProduct(response.data);
             } catch (err) {
                 toast.error('Failed to load product details');
-                navigate('/products'); // Redirect back if not found
+                navigate('/products');
             } finally {
                 setLoading(false);
             }
@@ -31,7 +32,8 @@ const ProductDetail = () => {
     const addToCart = async () => {
         setAddingToCart(true);
         try {
-            await api.post(`/carts/user/${user.id}/add`, { productId, quantity: 1 });
+            // Change 'productId' to 'productId: id' mapping to the variable from useParams()
+            await api.post(`/carts/user/${user.id}/add`, { productId: id, quantity: 1 });
             toast.success('Added to cart!');
         } catch (err) {
             toast.error('Could not add item.');

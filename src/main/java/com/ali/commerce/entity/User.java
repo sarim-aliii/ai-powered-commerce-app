@@ -37,7 +37,7 @@ public class User {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(nullable = false, precision = 10, scale = 2, columnDefinition = "numeric(10,2) default 0.00")
     private BigDecimal walletBalance = BigDecimal.ZERO;
 
     // This method automatically sets the timestamp before saving to the database
