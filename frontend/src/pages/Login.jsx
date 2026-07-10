@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, LogIn, ShoppingBag, Sparkles } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../services/api';
@@ -123,6 +123,14 @@ const Login = () => {
                             <LogIn className="h-5 w-5" />
                             {loading ? 'Authenticating...' : 'Sign in to Dashboard'}
                         </button>
+
+                        {/* New Sign Up Link */}
+                        <p className="mt-6 text-center text-sm text-gray-600">
+                            Don't have an account?{' '}
+                            <Link to="/signup" className="text-blue-600 font-bold hover:underline transition-all">
+                                Sign up here
+                            </Link>
+                        </p>
                     </form>
                 </div>
             </div>

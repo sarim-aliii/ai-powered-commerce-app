@@ -1,7 +1,7 @@
 package com.ali.commerce.service.impl;
 
 import com.ali.commerce.dto.request.AuthRequest;
-import com.ali.commerce.dto.request.UserRequest;
+import com.ali.commerce.dto.request.RegisterRequest;
 import com.ali.commerce.dto.response.AuthResponse;
 import com.ali.commerce.entity.User;
 import com.ali.commerce.repository.UserRepository;
@@ -26,25 +26,16 @@ public class AuthServiceImpl implements AuthService {
     private final UserDetailsService userDetailsService;
 
     @Override
-    public AuthResponse register(UserRequest request) {
+    public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already in use");
+            throw new RuntimeException("Email is already registered.");
         }
 
         User user = new User();
         user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-
-        if (request.getRole() != null) {
-            try {
-                user.setRole(User.Role.valueOf(request.getRole().toUpperCase()));
-            } catch (IllegalArgumentException e) {
-                user.setRole(User.Role.USER);
-            }
-        } else {
-            user.setRole(User.Role.USER);
-        }
+        user.setRole(User.Role.USER);
 
         userRepository.save(user);
 

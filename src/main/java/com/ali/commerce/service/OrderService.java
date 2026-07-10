@@ -14,4 +14,5 @@ public interface OrderService {
     String updateOrderStatus(Long id, String status);
     void deleteOrder(Long id);
     OrderResponse checkoutCart(CheckoutRequest request);
+    List<OrderResponse> getMyOrders(String email);
 }

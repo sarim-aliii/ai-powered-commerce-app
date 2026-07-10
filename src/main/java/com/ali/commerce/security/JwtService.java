@@ -31,7 +31,7 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    // New method to extract roles from the token
+    // Extracts roles from the token
     public List<String> extractRoles(String token) {
         return extractClaim(token, claims -> claims.get("roles", List.class));
     }
@@ -41,17 +41,26 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
+    // Method 1: The Setup (Gathers custom claims like roles and ID)
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
+
         // Extract authorities and add to claims
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
         claims.put("roles", roles);
 
+        // ✨ FIX: Extract the userId and add it to the claims
+        if (userDetails instanceof CustomUserDetails) {
+            claims.put("userId", ((CustomUserDetails) userDetails).getId());
+        }
+
+        // Pass the populated claims to the main builder method below
         return generateToken(claims, userDetails);
     }
 
+    // Method 2: The Builder (Encrypts and signs the token)
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts.builder()
                 .setClaims(extraClaims)

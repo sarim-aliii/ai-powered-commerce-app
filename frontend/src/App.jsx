@@ -11,6 +11,8 @@ import ProductDetail from './pages/ProductDetail';
 import { AuthProvider } from './context/AuthContext';
 import AIChatbot from './components/AIChatbot';
 import AdminDashboard from './pages/AdminDashboard';
+import Signup from './pages/Signup';
+import Profile from './pages/Profile';
 
 function App() {
   return (
@@ -41,6 +43,12 @@ function App() {
           <Route path="/admin" element={
               <ProtectedRoute adminOnly={true}>
                   <AdminDashboard />
+              </ProtectedRoute>
+          } />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/profile" element={
+              <ProtectedRoute>
+                  <Profile />
               </ProtectedRoute>
           } />
         </Routes>

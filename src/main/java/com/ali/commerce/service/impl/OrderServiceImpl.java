@@ -194,4 +194,26 @@ public class OrderServiceImpl implements OrderService {
 
         return "Order " + orderId + " marked as " + status.toUpperCase();
     }
+
+    @Override
+    public List<OrderResponse> getMyOrders(String email) {
+        // Find the user by email
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Assuming your OrderRepository has a method like findByUserOrderByCreatedAtDesc(User user)
+        // If not, you can just use findAll() and filter, but a custom query is better!
+        List<Order> orders = orderRepository.findByUser(user);
+
+        // Map to your existing OrderResponse DTO
+        return orders.stream().map(order -> {
+            OrderResponse response = new OrderResponse();
+            response.setId(order.getId());
+            response.setTotalAmount(order.getTotalAmount());
+            response.setStatus(order.getStatus());
+            response.setCreatedAt(order.getCreatedAt());
+            // Add any other fields your OrderResponse needs
+            return response;
+        }).collect(Collectors.toList());
+    }
 }

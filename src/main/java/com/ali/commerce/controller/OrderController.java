@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -56,5 +56,12 @@ public class OrderController {
     @PostMapping("/checkout")
     public ResponseEntity<OrderResponse> checkoutCart(@Valid @RequestBody CheckoutRequest request) {
         return new ResponseEntity<>(orderService.checkoutCart(request), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/my-orders")
+    public ResponseEntity<List<OrderResponse>> getMyOrders(Principal principal) {
+        // The Principal safely contains the email from the JWT token
+        List<OrderResponse> myOrders = orderService.getMyOrders(principal.getName());
+        return ResponseEntity.ok(myOrders);
     }
 }
