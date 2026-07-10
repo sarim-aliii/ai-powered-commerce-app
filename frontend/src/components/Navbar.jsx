@@ -1,5 +1,5 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { ShoppingBag, ShoppingCart, LogOut, Package, User, ShieldCheck, Tag, HelpCircle } from 'lucide-react';
+import { ShoppingBag, ShoppingCart, LogOut, Package, User, Tag, HelpCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import ThemeToggle from './ThemeToggle';
@@ -18,7 +18,6 @@ const Navbar = () => {
     };
 
     const isActive = (path) => location.pathname.startsWith(path);
-    const isAdmin = user?.roles?.includes('ROLE_ADMIN');
 
     return (
         <nav className="sticky top-0 z-50 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg border-b border-gray-100 dark:border-gray-800 shadow-sm transition-all">
