@@ -14,7 +14,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import Signup from './pages/Signup';
 import Profile from './pages/Profile';
 import Offers from './pages/Offers';
-import FAQ from './pages/faq';
+import FAQ from './pages/FAQ';
 
 function App() {
   return (
