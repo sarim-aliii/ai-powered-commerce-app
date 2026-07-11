@@ -13,11 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.List;
 
 @Component
 public class DataSeeder implements CommandLineRunner {
-
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
     private final CouponRepository couponRepository;
@@ -33,7 +31,6 @@ public class DataSeeder implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-        // Only seed data if the database is currently empty
         if (categoryRepository.count() == 0 && productRepository.count() == 0) {
             System.out.println("🌱 Seeding database with test data...");
 
@@ -81,7 +78,7 @@ public class DataSeeder implements CommandLineRunner {
             coffeeMaker.setImageUrl("https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?q=80&w=800&auto=format&fit=crop");
 
             Product jacket = new Product();
-            laptop.setName("Classic Denim Jacket");
+            jacket.setName("Classic Denim Jacket");
             jacket.setBrand("UrbanWear");
             jacket.setDescription("Vintage style denim jacket, perfect for all seasons. Durable and comfortable.");
             jacket.setPrice(new BigDecimal("89.50"));
