@@ -2,7 +2,7 @@ package com.ali.commerce.service;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import io.github.cdimascio.dotenv.Dotenv;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
@@ -12,13 +12,15 @@ import java.util.Map;
 public class CloudinaryService {
     private final Cloudinary cloudinary;
 
-    public CloudinaryService() {
-        Dotenv dotenv = Dotenv.load();
+    public CloudinaryService(
+            @Value("${CLOUDINARY_CLOUD_NAME}") String cloudName,
+            @Value("${CLOUDINARY_API_KEY}") String apiKey,
+            @Value("${CLOUDINARY_API_SECRET}") String apiSecret) {
 
         this.cloudinary = new Cloudinary(ObjectUtils.asMap(
-                "cloud_name", dotenv.get("CLOUDINARY_CLOUD_NAME"),
-                "api_key", dotenv.get("CLOUDINARY_API_KEY"),
-                "api_secret", dotenv.get("CLOUDINARY_API_SECRET")));
+                "cloud_name", cloudName,
+                "api_key", apiKey,
+                "api_secret", apiSecret));
     }
 
     public String uploadFile(MultipartFile file) throws IOException {
