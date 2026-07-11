@@ -17,20 +17,25 @@ const Cart = () => {
     const [discount, setDiscount] = useState(0);
     const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
 
+    const userId = user?.id;
+
     const fetchCart = useCallback(async () => {
         try {
-        const response = await api.get(`/carts/user/${user.id}`);
-        setCart(response.data);
-        } catch{
-        toast.error("Failed to fetch cart");
+            const response = await api.get(`/carts/user/${userId}`);
+            setCart(response.data);
+        } catch {
+            toast.error("Failed to fetch cart");
         } finally {
-        setLoading(false);
+            setLoading(false);
         }
-    }, [user?.id]);
+    }, [userId]);
 
     useEffect(() => {
-        if (user?.id) fetchCart();
-    }, [user?.id, fetchCart]);
+        if (userId) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            fetchCart();
+        }
+    }, [userId, fetchCart]);
 
     const handleRemoveItem = async (productId) => {
         try {
