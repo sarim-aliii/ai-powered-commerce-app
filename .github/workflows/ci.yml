@@ -37,6 +37,10 @@ jobs:
       - name: Build with Maven
         run: ./mvnw clean package -DskipTests
       - name: Run Tests
+        env:
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/commerce_db
+          SPRING_DATASOURCE_USERNAME: postgres
+          SPRING_DATASOURCE_PASSWORD: 09488549
         run: ./mvnw test
 
   # Frontend Job (React)
