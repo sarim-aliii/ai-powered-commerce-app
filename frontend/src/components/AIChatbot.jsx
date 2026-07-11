@@ -11,7 +11,6 @@ const AIChatbot = () => {
     const [loading, setLoading] = useState(false);
     const messagesEndRef = useRef(null);
 
-    // Auto-scroll to the newest message
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     };
@@ -30,11 +29,10 @@ const AIChatbot = () => {
         setLoading(true);
 
         try {
-            // Hit your Java backend, which forwards it to Python
             const response = await api.post('/chat', { message: userMessage });
 
             setMessages(prev => [...prev, { sender: 'bot', text: response.data.reply }]);
-        } catch () {
+        } catch {
             setMessages(prev => [...prev, { sender: 'bot', text: 'Oops! Connection lost. Please try again.' }]);
         } finally {
             setLoading(false);
@@ -43,11 +41,8 @@ const AIChatbot = () => {
 
     return (
         <div className="fixed bottom-6 right-6 z-50">
-            {/* The Chat Window */}
             {isOpen && (
                 <div className="mb-4 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-gray-100 flex flex-col overflow-hidden transition-all duration-300 transform origin-bottom-right">
-
-                    {/* Header */}
                     <div className="bg-blue-600 text-white p-4 flex justify-between items-center">
                         <div className="flex items-center gap-2">
                             <Bot className="h-6 w-6" />
@@ -58,7 +53,6 @@ const AIChatbot = () => {
                         </button>
                     </div>
 
-                    {/* Messages Area */}
                     <div className="flex-1 p-4 h-96 overflow-y-auto bg-gray-50 flex flex-col gap-3">
                         {messages.map((msg, idx) => (
                             <div key={idx} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
@@ -83,7 +77,6 @@ const AIChatbot = () => {
                         <div ref={messagesEndRef} />
                     </div>
 
-                    {/* Input Area */}
                     <form onSubmit={handleSend} className="p-3 bg-white border-t border-gray-100 flex gap-2">
                         <input
                             type="text"
@@ -104,7 +97,6 @@ const AIChatbot = () => {
                 </div>
             )}
 
-            {/* The Floating Action Button */}
             {!isOpen && (
                 <button
                     onClick={() => setIsOpen(true)}

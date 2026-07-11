@@ -25,7 +25,7 @@ const Cart = () => {
         try {
             const response = await api.get(`/carts/user/${user.id}`);
             setCart(response.data);
-        } catch () {
+        } catch{
             toast.error("Failed to fetch cart");
         } finally {
             setLoading(false);
@@ -37,7 +37,7 @@ const Cart = () => {
             await api.delete(`/carts/user/${user.id}/remove/${productId}`);
             toast.success('Item removed');
             fetchCart();
-        } catch () {
+        } catch{
             toast.error('Failed to remove item');
         }
     };
@@ -48,7 +48,7 @@ const Cart = () => {
             await api.post('/orders/checkout', { userId: user.id, shippingAddress: '123 React Street, Web City' });
             toast.success('Order placed successfully!');
             navigate('/products');
-        } catch () {
+        } catch{
             toast.error('Checkout failed');
         } finally {
             setIsCheckingOut(false);

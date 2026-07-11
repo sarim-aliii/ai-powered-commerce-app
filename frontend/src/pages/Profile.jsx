@@ -23,7 +23,7 @@ const Profile = () => {
             try {
                 const response = await api.get('/users/profile');
                 setProfileData(response.data);
-            } catch () {
+            } catch{
                 toast.error("Failed to load profile data");
             } finally {
                 setLoading(false);
@@ -39,7 +39,7 @@ const Profile = () => {
                 try {
                     const response = await api.get('/orders/my-orders');
                     setOrders(response.data);
-                } catch () {
+                } catch{
                     toast.error("Failed to load order history");
                 } finally {
                     setLoadingOrders(false);

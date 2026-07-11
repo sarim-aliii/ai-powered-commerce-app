@@ -20,7 +20,7 @@ const Login = () => {
             login(response.data.token);
             toast.success('Welcome back!');
             navigate('/products');
-        } catch () {
+        } catch{
             toast.error('Invalid credentials. Please try again.');
         } finally {
             setLoading(false);

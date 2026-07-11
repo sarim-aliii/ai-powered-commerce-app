@@ -12,7 +12,7 @@ const Offers = () => {
             try {
                 const response = await api.get('/coupons/active');
                 setCoupons(response.data);
-            } catch () {
+            } catch{
                 toast.error("Failed to load offers");
             } finally {
                 setLoading(false);

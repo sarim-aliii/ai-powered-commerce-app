@@ -26,7 +26,7 @@ const AdminDashboard = () => {
                 const res = await api.get('/admin/categories');
                 setCategories(res.data);
             }
-        } catch () {
+        } catch {
             toast.error("Failed to load data");
         }
     };
@@ -41,7 +41,7 @@ const AdminDashboard = () => {
                 await api.delete(`/admin/products/${productId}`);
                 toast.success("Product deleted");
                 fetchAdminData();
-            } catch () {
+            } catch {
                 toast.error("Failed to delete");
             }
         }
@@ -54,7 +54,7 @@ const AdminDashboard = () => {
             toast.success("Category added successfully!");
             setNewCategory({ name: '', description: '' });
             fetchAdminData();
-        } catch () {
+        } catch{
             toast.error("Failed to add category");
         }
     };
@@ -64,7 +64,7 @@ const AdminDashboard = () => {
             await api.put(`/admin/orders/${orderId}/status?status=${newStatus}`);
             toast.success(`Order #${orderId} marked as ${newStatus}`);
             fetchAdminData();
-        } catch () {
+        } catch{
             toast.error("Failed to update order status");
         }
     };

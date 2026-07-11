@@ -19,7 +19,7 @@ const ProductDetail = () => {
             try {
                 const response = await api.get(`/products/${id}`);
                 setProduct(response.data);
-            } catch () {
+            } catch{
                 toast.error('Failed to load product details');
                 navigate('/products');
             } finally {
@@ -35,7 +35,7 @@ const ProductDetail = () => {
             // Change 'productId' to 'productId: id' mapping to the variable from useParams()
             await api.post(`/carts/user/${user.id}/add`, { productId: id, quantity: 1 });
             toast.success('Added to cart!');
-        } catch () {
+        } catch{
             toast.error('Could not add item.');
         } finally {
             setAddingToCart(false);

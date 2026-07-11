@@ -8,17 +8,15 @@ export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // 1. Define logout using useCallback so it's stable and can be used in effects/dependencies
     const logout = useCallback(() => {
         localStorage.removeItem('jwt_token');
         setToken(null);
         setUser(null);
     }, []);
 
-    // 2. Define user initialization logic
-    const initializeUser = useCallback((token) => {
+    const initializeUser = useCallback((currentToken) => {
         try {
-            const decoded = jwtDecode(token);
+            const decoded = jwtDecode(currentToken);
             let rawRoles = decoded.roles || decoded.role || [];
             if (!Array.isArray(rawRoles)) {
                 rawRoles = [rawRoles];
@@ -32,13 +30,12 @@ export const AuthProvider = ({ children }) => {
                 email: decoded.sub,
                 roles: normalizedRoles
             });
-        } catch (error) {
+        } catch {
             console.error("Invalid token format");
-            logout(); // Now this is safely defined
+            logout();
         }
     }, [logout]);
 
-    // 3. Only the effect runs the logic
     useEffect(() => {
         if (token) {
             initializeUser(token);
@@ -60,4 +57,5 @@ export const AuthProvider = ({ children }) => {
     );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => useContext(AuthContext);
