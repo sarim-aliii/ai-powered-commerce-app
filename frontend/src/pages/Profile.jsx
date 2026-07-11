@@ -85,7 +85,6 @@ const Profile = () => {
             <h1 className="text-3xl font-extrabold text-gray-900 mb-8">My Account</h1>
 
             <div className="flex flex-col md:flex-row gap-8">
-                {/* Sidebar Navigation */}
                 <div className="w-full md:w-64 flex flex-col gap-2">
                     <button
                         onClick={() => setActiveTab('personal')}
@@ -100,7 +99,6 @@ const Profile = () => {
                         <Package size={20} /> Order History
                     </button>
 
-                    {/* ✨ NEW: Wallet Button */}
                     <button
                         onClick={() => setActiveTab('wallet')}
                         className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all ${activeTab === 'wallet' ? 'bg-blue-600 text-white shadow-md' : 'text-gray-600 hover:bg-gray-100'}`}
@@ -131,10 +129,7 @@ const Profile = () => {
                     </button>
                 </div>
 
-                {/* Main Content Area */}
                 <div className="flex-1 bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
-
-                    {/* 1. Personal Info Tab */}
                     {activeTab === 'personal' && (
                         <div className="space-y-6">
                             <h2 className="text-2xl font-bold text-gray-900 mb-6">Personal Information</h2>
@@ -161,7 +156,6 @@ const Profile = () => {
                         </div>
                     )}
 
-                    {/* 2. Order History Tab */}
                     {activeTab === 'orders' && (
                         <div className="space-y-6">
                             <h2 className="text-2xl font-bold text-gray-900 mb-6">Order History</h2>
@@ -190,7 +184,6 @@ const Profile = () => {
                         </div>
                     )}
 
-                    {/* 3. Digital Wallet Tab */}
                     {activeTab === 'wallet' && (
                         <div className="space-y-6 max-w-lg">
                             <h2 className="text-2xl font-bold text-gray-900 mb-6">Digital Wallet</h2>
@@ -208,7 +201,6 @@ const Profile = () => {
                                 </div>
                             </div>
 
-                            {/* Add Funds Form */}
                             <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100 mt-8">
                                 <h4 className="text-lg font-bold text-gray-900 mb-4">Top Up Wallet</h4>
                                 <form onSubmit={handleAddFunds} className="flex gap-4">
@@ -240,7 +232,6 @@ const Profile = () => {
                         </div>
                     )}
 
-                    {/* 4. Placeholder for remaining tabs */}
                     {['addresses', 'payment'].includes(activeTab) && (
                         <div className="flex flex-col items-center justify-center py-20 text-center">
                             <div className="h-16 w-16 bg-blue-50 rounded-full flex items-center justify-center mb-4">

@@ -29,9 +29,7 @@ const Login = () => {
 
     return (
         <div className="min-h-screen flex bg-white">
-            {/* Left Panel - Branding (Hidden on smaller screens) */}
             <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-700 via-blue-600 to-indigo-900 p-12 relative overflow-hidden items-center justify-center">
-                {/* Decorative background shapes */}
                 <div className="absolute top-0 left-0 w-full h-full opacity-10">
                     <div className="absolute top-10 left-10 w-72 h-72 bg-white rounded-full mix-blend-overlay filter blur-3xl animate-pulse"></div>
                     <div className="absolute bottom-10 right-10 w-96 h-96 bg-blue-300 rounded-full mix-blend-overlay filter blur-3xl opacity-50"></div>
@@ -51,7 +49,6 @@ const Login = () => {
                 </div>
             </div>
 
-            {/* Right Panel - Login Form */}
             <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 lg:p-24 bg-gray-50/50">
                 <div className="w-full max-w-md">
                     <div className="text-center lg:text-left mb-10">
@@ -124,7 +121,6 @@ const Login = () => {
                             {loading ? 'Authenticating...' : 'Sign in to Dashboard'}
                         </button>
 
-                        {/* New Sign Up Link */}
                         <p className="mt-6 text-center text-sm text-gray-600">
                             Don't have an account?{' '}
                             <Link to="/signup" className="text-blue-600 font-bold hover:underline transition-all">

@@ -13,7 +13,7 @@ const Signup = () => {
     });
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-    const { login } = useAuth(); // Grab the login function from context
+    const { login } = useAuth();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -30,7 +30,6 @@ const Signup = () => {
                 password: formData.password
             });
 
-            // The backend returns a token, so we log them in immediately
             login(response.data.token);
             toast.success("Account created successfully!");
             navigate('/products'); // Send them to the store!

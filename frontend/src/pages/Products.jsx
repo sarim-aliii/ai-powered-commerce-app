@@ -17,7 +17,6 @@ const Products = () => {
     const { user } = useAuth();
 
     useEffect(() => {
-        // Initial fetch
         const fetchProducts = async () => {
             try {
                 const response = await api.get('/products');
@@ -31,7 +30,6 @@ const Products = () => {
         fetchProducts();
     }, []);
 
-    // Debounced search function
     const fetchSearchResults = useCallback(
         debounce(async (query) => {
             try {
@@ -153,7 +151,6 @@ const Products = () => {
                 ))}
             </div>
 
-            {/* Empty State for Search */}
             {products.length === 0 && (
                 <div className="text-center py-20 text-gray-500">
                     No products found.

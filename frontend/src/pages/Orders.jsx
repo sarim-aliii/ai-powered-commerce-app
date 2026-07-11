@@ -5,15 +5,12 @@ import api from '../services/api';
 const Orders = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
-
-    // In production, grab this from your Auth Context
     const currentUserId = 2;
 
     useEffect(() => {
         const fetchOrders = async () => {
             try {
                 const response = await api.get(`/orders/user/${currentUserId}`);
-                // Sort orders so the newest ones appear first
                 const sortedOrders = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                 setOrders(sortedOrders);
             } catch (error) {

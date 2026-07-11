@@ -13,8 +13,6 @@ const Cart = () => {
     const [loading, setLoading] = useState(true);
     const [isCheckingOut, setIsCheckingOut] = useState(false);
     const navigate = useNavigate();
-
-    // Coupon states
     const [couponCode, setCouponCode] = useState('');
     const [discount, setDiscount] = useState(0);
     const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
@@ -117,10 +115,7 @@ const Cart = () => {
                     ))}
                 </div>
 
-                {/* Right Column: Order Summary */}
                 <div className="lg:col-span-5 space-y-6 sticky top-24">
-
-                    {/* Promo Code Box */}
                     <div className="bg-white rounded-3xl p-6 border shadow-sm">
                         <form onSubmit={handleApplyCoupon} className="flex gap-2">
                             <div className="relative flex-1">
@@ -143,7 +138,6 @@ const Cart = () => {
                         </form>
                     </div>
 
-                    {/* Order Summary Box */}
                     <div className="bg-gray-50 rounded-3xl p-8 border">
                         <h2 className="text-xl font-extrabold mb-6">Order Summary</h2>
                         <div className="space-y-4 mb-8 border-b pb-6 text-gray-600">

@@ -23,7 +23,7 @@ const AdminDashboard = () => {
                 const res = await api.get('/admin/products');
                 setProducts(res.data);
             } else if (activeTab === 'categories') {
-                const res = await api.get('/admin/categories'); // Fetch categories here
+                const res = await api.get('/admin/categories');
                 setCategories(res.data);
             }
         } catch () {
@@ -52,8 +52,8 @@ const AdminDashboard = () => {
         try {
             await api.post('/admin/categories', newCategory);
             toast.success("Category added successfully!");
-            setNewCategory({ name: '', description: '' }); // Clear the form
-            fetchAdminData(); // Refresh the list
+            setNewCategory({ name: '', description: '' });
+            fetchAdminData();
         } catch () {
             toast.error("Failed to add category");
         }
@@ -73,7 +73,6 @@ const AdminDashboard = () => {
         <div className="max-w-7xl mx-auto px-4 py-8 relative">
             <h1 className="text-3xl font-extrabold mb-8">Admin Control Panel</h1>
 
-            {/* Admin Tabs */}
             <div className="flex gap-4 mb-8">
                 {['orders', 'products', 'categories'].map((tab) => (
                     <button
@@ -88,10 +87,7 @@ const AdminDashboard = () => {
                 ))}
             </div>
 
-            {/* Dashboard Content */}
             <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
-
-                {/* Orders Tab */}
                 {activeTab === 'orders' && (
                     <div className="overflow-x-auto">
                         <table className="w-full text-left">
@@ -143,7 +139,6 @@ const AdminDashboard = () => {
                     </div>
                 )}
 
-                {/* Products Tab */}
                 {activeTab === 'products' && (
                     <div className="space-y-4">
                         <button onClick={() => setShowAddModal(true)} className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
@@ -223,7 +218,6 @@ const AdminDashboard = () => {
                             </button>
                         </form>
 
-                        {/* Categories Table */}
                         <div className="overflow-x-auto">
                             <table className="w-full text-left">
                                 <thead>

@@ -10,7 +10,6 @@ const Offers = () => {
     useEffect(() => {
         const fetchOffers = async () => {
             try {
-                // Fetching active coupons from our new endpoint
                 const response = await api.get('/coupons/active');
                 setCoupons(response.data);
             } catch () {
