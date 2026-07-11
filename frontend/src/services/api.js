@@ -1,14 +1,11 @@
 import axios from 'axios';
 
-// Create a configured instance of Axios
 const api = axios.create({
-    baseURL: 'http://localhost:8080/api' || import.meta.env.VITE_API_URL,
+    baseURL: import.meta.env.VITE_API_URL || 'https://ai-powered-commerce-app.onrender.com/api',
 });
 
-// Intercept all outgoing requests
 api.interceptors.request.use(
     (config) => {
-        // Retrieve the token saved during the login step
         const token = localStorage.getItem('jwt_token');
 
         // If a token exists, attach it to the Authorization header
