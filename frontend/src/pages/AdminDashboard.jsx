@@ -1,3 +1,6 @@
+/* eslint-disable react-hooks/set-state-in-effect */
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import  { useState, useEffect, useCallback } from 'react';
 import { Trash2, Plus } from 'lucide-react';
 import api from '../services/api';

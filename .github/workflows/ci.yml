@@ -41,7 +41,9 @@ jobs:
           SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/commerce_db
           SPRING_DATASOURCE_USERNAME: postgres
           SPRING_DATASOURCE_PASSWORD: 09488549
-        run: ./mvnw test
+        run: |
+          echo "CLOUDINARY_URL=cloudinary://test:test@test" > .env
+          ./mvnw test
 
   # Frontend Job (React)
   build-frontend:
