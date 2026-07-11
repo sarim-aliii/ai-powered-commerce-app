@@ -38,6 +38,7 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         if (token) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             initializeUser(token);
         } else {
             setUser(null);

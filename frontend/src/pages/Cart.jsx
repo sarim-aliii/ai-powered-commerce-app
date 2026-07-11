@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     ShoppingCart, Trash2, CreditCard, PackageSearch, ShieldCheck, Tag, Ticket
@@ -17,20 +17,20 @@ const Cart = () => {
     const [discount, setDiscount] = useState(0);
     const [isValidatingCoupon, setIsValidatingCoupon] = useState(false);
 
+    const fetchCart = useCallback(async () => {
+        try {
+        const response = await api.get(`/carts/user/${user.id}`);
+        setCart(response.data);
+        } catch{
+        toast.error("Failed to fetch cart");
+        } finally {
+        setLoading(false);
+        }
+    }, [user?.id]);
+
     useEffect(() => {
         if (user?.id) fetchCart();
     }, [user?.id, fetchCart]);
-
-    const fetchCart = async () => {
-        try {
-            const response = await api.get(`/carts/user/${user.id}`);
-            setCart(response.data);
-        } catch{
-            toast.error("Failed to fetch cart");
-        } finally {
-            setLoading(false);
-        }
-    };
 
     const handleRemoveItem = async (productId) => {
         try {

@@ -1,4 +1,4 @@
-import  { useState, useEffect } from 'react';
+import  { useState, useEffect, useCallback } from 'react';
 import { Trash2, Plus } from 'lucide-react';
 import api from '../services/api';
 import toast from 'react-hot-toast';
@@ -14,26 +14,27 @@ const AdminDashboard = () => {
     const [newCategory, setNewCategory] = useState({ name: '', description: '' });
     const [editingProduct, setEditingProduct] = useState(null);
 
-    const fetchAdminData = async () => {
-        try {
-            if (activeTab === 'orders') {
-                const res = await api.get('/admin/orders');
-                setOrders(res.data);
-            } else if (activeTab === 'products') {
-                const res = await api.get('/admin/products');
-                setProducts(res.data);
-            } else if (activeTab === 'categories') {
-                const res = await api.get('/admin/categories');
-                setCategories(res.data);
-            }
-        } catch {
-            toast.error("Failed to load data");
-        }
-    };
+    const fetchAdminData = useCallback(async () => {
+       try {
+           if (activeTab === 'orders') {
+               const res = await api.get('/admin/orders');
+               setOrders(res.data);
+           } else if (activeTab === 'products') {
+               const res = await api.get('/admin/products');
+               setProducts(res.data);
+           } else if (activeTab === 'categories') {
+               const res = await api.get('/admin/categories');
+               setCategories(res.data);
+           }
+       } catch {
+           toast.error("Failed to load data");
+       }
+   }, [activeTab]);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         fetchAdminData();
-    }, [activeTab]);
+    }, [fetchAdminData]);
 
     const handleDelete = async (productId) => {
         if (window.confirm("Are you sure you want to delete this product?")) {

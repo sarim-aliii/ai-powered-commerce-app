@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useEffect} from 'react';
 import { ShoppingCart, PackageSearch, Search } from 'lucide-react';
 import toast from 'react-hot-toast';
 import api from '../services/api';
@@ -30,13 +30,13 @@ const Products = () => {
         fetchProducts();
     }, []);
 
-    const fetchSearchResults = useCallback(
-        debounce(async (query) => {
+    const fetchSearchResults = useMemo(
+        () => debounce(async (query) => {
             try {
                 const endpoint = query.trim() ? `/products/search?query=${query}` : '/products';
                 const response = await api.get(endpoint);
                 setProducts(response.data);
-            } catch{
+            } catch {
                 toast.error('Search failed');
             }
         }, 300),
